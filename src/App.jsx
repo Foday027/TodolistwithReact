@@ -7,21 +7,32 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState('');
 
-  // const handleClickDelete = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setTodos([...todos, { label: input, done: false }]);
+    setInput('')
+  };
 
+  // const handleDelete = (i) => {
+  //   let aux = todos;
+  //   aux = aux.filter((el, index) => i !== index);
+  //   setTodos(aux);
   // }
-  async function fetchData() {
+
+
+
+
+  useEffect(() => {
+    async function fetchData() {
       let resp = await axios.get('https://playground.4geeks.com/todo/users/saeed');
       let respData = await resp.data;
       setTodos(respData);
       console.log(todos)
     }
-
-
-  useEffect(() => {
-  
     fetchData();
+
   }, []);
+
 
   const createPost = async (text) => {
 
@@ -33,45 +44,39 @@ function App() {
     }
     );
 
-    fetchData()
 
-    console.log(response.json)
-  }
-
+    console.log(response.json);
+  };
   createPost();
 
 
 
   return (
-    <div className='text-center text-light'>
+    <div className='text-center text-light bg-secondary pb-1 rounded'>
 
-      <form className='card-container border bg-secondary rounded' onSubmit={(e) => {
-        e.preventDefault();
-        createPost()       //prevents the page from reloading when submit
-      }}>
+      <form className='mx-3' onSubmit={handleSubmit}>
 
-        <label className='label me-1 mb-2 text-primary '><h1><em>My must have :</em></h1></label><br />
+        <label className='label me-1 mb-2 text-primary'><h1><em>My must have</em></h1></label><br />
         <input
-          className="bg-success rounded me-2"
+          className="bg-success rounded  me-2"
           type='text'
-          placeholder='Add to your list'
+          placeholder='Add to your desire'
           value={input}
           onChange={(e) => {
             setInput(e.target.value)
           }}
         />
-        <button type='submit'>Submit</button>
+        <button className='mb-3' type='submit'>Submit</button>
       </form>
-<ul>
-      {todos && todos.map((el, i) => {
-        return (
-          
-            <li key={i}>{el.label}</li>
-          
+      <ul>
+        {todos && todos.map((el, i) => {
+          return (
 
-        )
-      })}
-</ul>
+            <li className=" list-style list-group-item border-light mt-1 me-4 rounded" key={i}>{el.label}</li>
+
+          )
+        })}
+      </ul>
 
     </div>
   );
